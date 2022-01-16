@@ -1,22 +1,38 @@
 <template>
-  <div class="container">
+  <div class="container my-5">
     <div class="row justify-content-center align-items-center">
       <template v-for="item in products" :key="item.id">
-        <h2>{{ item.title }}</h2>
-        <div class="col-4">
-          <p>產品分類：{{ item.category }}</p>
-          <p>產品說明：{{ item.content }}</p>
-          <p>產品描述：{{ item.description }}</p>
-          <p>產品ID：{{ item.id }}</p>
-          <p>原價：{{ item.origin_price }}</p>
-          <p>特價：{{ item.price }}</p>
-          <p>剩餘數量：{{ item.num }} {{ item.unit }}</p>
+        <div class="col">
+          <div class="mx-3">
+            <h2>{{ item.title }}</h2>
+          </div>
         </div>
-        <div class="col-6">
-          <img class="img-fluid" :src="item.imageUrl" alt="" />
-          <template v-for="(pic, idx) in item.imagesUrl" :key="idx">
-            <img class="img-fluid w-25" :src="pic" alt="" />
-          </template>
+        <div class="row">
+          <div class="col-4">
+            <div class="d-flex h-100 flex-column justify-content-between p-3">
+              <p>產品分類：{{ item.category }}</p>
+              <p>產品說明：{{ item.content }}</p>
+              <p>產品描述：{{ item.description }}</p>
+              <p>產品ID：{{ item.id }}</p>
+              <p>原價：{{ item.origin_price }}</p>
+              <p>特價：{{ item.price }}</p>
+              <p>剩餘數量：{{ item.num }} {{ item.unit }}</p>
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="row border p-3">
+              <div class="col-10">
+                <img class="img-fluid" :src="item.imageUrl" alt="" />
+              </div>
+              <div class="col-2">
+                <div class="d-flex h-100 flex-column justify-content-between">
+                  <template v-for="(pic, idx) in item.imagesUrl" :key="idx">
+                    <img class="img-fluid m-2" :src="pic" alt="" />
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </template>
     </div>
