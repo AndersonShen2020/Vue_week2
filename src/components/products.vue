@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { getProducts } from "../api/axios";
 import axios from "axios";
 const url = "https://vue3-course-api.hexschool.io/v2"; // 請加入站點
 const path = "ashen"; // 請加入個人 API path
@@ -51,17 +52,10 @@ export default {
     };
   },
   methods: {
-    getProducts() {
-      // #5 取得後台產品列表
-      axios
-        .get(`${url}/api/${path}/admin/products`)
-        .then((res) => {
-          console.log(res.data);
-          this.products = res.data.products;
-        })
-        .catch((err) => {
-          console.log(err.response.data.message);
-        });
+    async getItems() {
+      const data = await getProducts(url, path);
+      console.log(data);
+      this.products = data;
     },
   },
   mounted() {
@@ -73,7 +67,7 @@ export default {
     // 設定 axios 在 headers 中夾帶 token
     axios.defaults.headers.common["Authorization"] = token;
 
-    this.getProducts();
+    this.getItems();
   },
 };
 </script>
