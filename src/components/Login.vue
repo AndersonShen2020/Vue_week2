@@ -27,7 +27,11 @@
             />
             <label for="floatingPassword">Password</label>
           </div>
-          <button class="btn btn-lg btn-primary w-100 mt-3" type="submit">
+          <button
+            class="btn btn-lg btn-primary w-100 mt-3"
+            type="submit"
+            @click.prevent="login"
+          >
             登入
           </button>
         </form>
@@ -38,6 +42,10 @@
 </template>
 
 <script>
+import axios from "axios";
+const url = "https://vue3-course-api.hexschool.io/v2"; // 請加入站點
+// const path = "ashen"; // 請加入個人 API path
+
 export default {
   data() {
     return {
@@ -47,8 +55,24 @@ export default {
       },
     };
   },
+  methods: {
+    login() {
+      axios
+        .post(`${url}/admin/signin`, this.user)
+        .then((res) => {
+          console.log(res);
+          // expired = unix timestamp
+          const { token, expired } = res.data;
+          document.cookie = `hexToken=${token}; expires=${new Date(expired)};`;
+        })
+        .catch((err) => {
+          console.log(err.response.data.error.message);
+        });
+    },
+  },
 };
 </script>
+
 <style lang="scss">
 html,
 body {
