@@ -4,7 +4,7 @@
       <template v-for="item in products" :key="item.id">
         <div class="col">
           <div class="mx-3">
-            <h2>{{ item.title }}</h2>
+            <h2 class="display-1">{{ item.title }}</h2>
           </div>
         </div>
         <div class="row">
