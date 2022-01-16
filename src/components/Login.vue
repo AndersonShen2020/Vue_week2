@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import router from "../router";
 import axios from "axios";
 const url = "https://vue3-course-api.hexschool.io/v2"; // 請加入站點
 // const path = "ashen"; // 請加入個人 API path
@@ -64,6 +65,7 @@ export default {
           // expired = unix timestamp
           const { token, expired } = res.data;
           document.cookie = `hexToken=${token}; expires=${new Date(expired)};`;
+          router.push("/products");
         })
         .catch((err) => {
           console.log(err.response.data.error.message);
