@@ -181,7 +181,8 @@ export default {
         })
         .catch((err) => {
           alert(err.response.data.message);
-          router.go(-1);
+          // router.go(-1);
+          router.push("/");
         });
     },
     async getItems() {
