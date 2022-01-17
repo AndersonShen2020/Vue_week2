@@ -70,13 +70,23 @@
               </div>
             </div>
           </div>
-          <template v-if="tempProduct.title">
+          <template v-if="tempProduct.imagesUrl.length <= 4">
             <img
               :src="item"
               alt=""
-              class="img-fluid m-2 w-25"
+              class="images m-2"
               v-for="(item, idx) in tempProduct.imagesUrl"
               :key="idx"
+            />
+          </template>
+          <template v-else>
+            <img
+              :src="item"
+              alt=""
+              class="images m-2"
+              v-for="(item, idx) in tempProduct.imagesUrl"
+              :key="idx"
+              style="width: 100px"
             />
           </template>
         </template>
@@ -170,8 +180,7 @@ export default {
           this.getItems();
         })
         .catch((err) => {
-          console.log(err.response.data.message);
-          alert("輸入的帳號或密碼錯誤，將導回登入頁面");
+          alert(err.response.data.message);
           router.go(-1);
         });
     },
