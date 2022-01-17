@@ -1,61 +1,184 @@
 <template>
-  <div class="container my-5">
-    <div class="row justify-content-center align-items-center">
-      <template v-for="item in products" :key="item.id">
-        <div class="col">
-          <div class="mx-3">
-            <h2 class="display-1">{{ item.title }}</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-4">
-            <div class="d-flex h-100 flex-column justify-content-between p-3">
-              <p>產品分類：{{ item.category }}</p>
-              <p>產品說明：{{ item.content }}</p>
-              <p>產品描述：{{ item.description }}</p>
-              <p>產品ID：{{ item.id }}</p>
-              <p>原價：{{ item.origin_price }}</p>
-              <p>特價：{{ item.price }}</p>
-              <p>剩餘數量：{{ item.num }} {{ item.unit }}</p>
+  <div class="container">
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <h2>產品列表</h2>
+        <table class="table table-hover mt-4">
+          <thead>
+            <tr>
+              <th width="150">產品名稱</th>
+              <th width="120">原價</th>
+              <th width="120">售價</th>
+              <th width="150">是否啟用</th>
+              <th width="120">查看細節</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in products" :key="item.id">
+              <td width="150">{{ item.title }}</td>
+              <td width="120">
+                {{ item.origin_price }}
+              </td>
+              <td width="120">
+                {{ item.price }}
+              </td>
+              <td width="150">
+                <span class="text-success" v-if="item.is_enabled">啟用</span>
+                <span v-else>未啟用</span>
+              </td>
+              <td width="120">
+                <!-- tempProduct = item -->
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  @click="tempProduct = item"
+                >
+                  查看細節
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          目前有 <span>{{ products.length }}</span> 項產品
+        </p>
+      </div>
+      <div class="col-md-6">
+        <h2>單一產品細節</h2>
+        <template v-if="tempProduct.title">
+          <div class="card mb-3">
+            <img
+              :src="tempProduct.imageUrl"
+              class="card-img-top primary-image"
+              alt="主圖"
+            />
+            <div class="card-body">
+              <h5 class="card-title">
+                {{ tempProduct.title }}
+                <span class="badge bg-primary ms-2">{{
+                  tempProduct.category
+                }}</span>
+              </h5>
+              <p class="card-text">商品描述：{{ tempProduct.description }}</p>
+              <p class="card-text">商品內容：{{ tempProduct.content }}</p>
+              <div class="d-flex">
+                <p class="card-text me-2">{{ tempProduct.price }}</p>
+                <p class="card-text text-secondary">
+                  <del>{{ tempProduct.origin_price }}</del>
+                </p>
+                {{ tempProduct.unit }} / 元
+              </div>
             </div>
           </div>
-          <div class="col-8">
-            <div class="row border p-3">
-              <div class="col-10">
-                <img class="img-fluid" :src="item.imageUrl" alt="" />
-              </div>
-              <div class="col-2">
-                <div class="d-flex h-100 flex-column justify-content-between">
-                  <template v-for="(pic, idx) in item.imagesUrl" :key="idx">
-                    <img class="img-fluid m-2" :src="pic" alt="" />
-                  </template>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
+          <template v-if="tempProduct.title">
+            <img
+              :src="item"
+              alt=""
+              class="img-fluid m-2 w-25"
+              v-for="(item, idx) in tempProduct.imagesUrl"
+              :key="idx"
+            />
+          </template>
+        </template>
+        <p class="text-secondary" v-else>請選擇一個商品查看</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import router from "../router";
 import { getProducts } from "../api/axios";
 import axios from "axios";
 const url = "https://vue3-course-api.hexschool.io/v2"; // 請加入站點
 const path = "ashen"; // 請加入個人 API path
 
+const testProducts = {
+  products: [
+    {
+      category: "甜甜圈",
+      content: "尺寸：14x14cm",
+      description:
+        "濃郁的草莓風味，中心填入滑順不膩口的卡士達內餡，帶來滿滿幸福感！",
+      id: "-L9tH8jxVb2Ka_DYPwng",
+      is_enabled: 1,
+      origin_price: 150,
+      price: 99,
+      title: "草莓莓果夾心圈",
+      unit: "個",
+      num: 10,
+      imageUrl:
+        "https://images.unsplash.com/photo-1583182332473-b31ba08929c8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NzR8fGRvbnV0fGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60",
+      imagesUrl: [
+        "https://images.unsplash.com/photo-1626094309830-abbb0c99da4a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2832&q=80",
+        "https://images.unsplash.com/photo-1559656914-a30970c1affd?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTY0fHxkb251dHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60",
+      ],
+    },
+    {
+      category: "蛋糕",
+      content: "尺寸：6寸",
+      description:
+        "蜜蜂蜜蛋糕，夾層夾上酸酸甜甜的檸檬餡，清爽可口的滋味讓人口水直流！",
+      id: "-McJ-VvcwfN1_Ye_NtVA",
+      is_enabled: 16,
+      origin_price: 1000,
+      price: 900,
+      title: "蜂蜜檸檬蛋糕",
+      unit: "個",
+      num: 1,
+      imageUrl:
+        "https://images.unsplash.com/photo-1627834377411-8da5f4f09de8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1001&q=80",
+      imagesUrl: [
+        "https://images.unsplash.com/photo-1618888007540-2bdead974bbb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=987&q=80",
+      ],
+    },
+    {
+      category: "蛋糕",
+      content: "尺寸：6寸",
+      description: "法式煎薄餅加上濃郁可可醬，呈現經典的美味及口感。",
+      id: "-McJ-VyqaFlLzUMmpPpm",
+      is_enabled: 1,
+      origin_price: 700,
+      price: 600,
+      title: "暗黑千層",
+      unit: "個",
+      num: 15,
+      imageUrl:
+        "https://images.unsplash.com/photo-1505253149613-112d21d9f6a9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDZ8fGNha2V8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60",
+      imagesUrl: [
+        "https://images.unsplash.com/flagged/photo-1557234985-425e10c9d7f1?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTA5fHxjYWtlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60",
+        "https://images.unsplash.com/photo-1540337706094-da10342c93d8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fGNha2V8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60",
+      ],
+    },
+  ],
+};
+
 export default {
   data() {
     return {
+      tempProduct: {},
       products: [],
     };
   },
   methods: {
+    checkAdmin() {
+      // #4 確認是否登入
+      axios
+        .post(`${url}/api/user/check`)
+        .then((res) => {
+          console.log(res.data);
+          this.getItems();
+        })
+        .catch((err) => {
+          console.log(err.response.data.message);
+          alert("輸入的帳號或密碼錯誤，將導回登入頁面");
+          router.go(-1);
+        });
+    },
     async getItems() {
       const data = await getProducts(url, path);
       console.log(data);
-      this.products = data;
+      this.products = [data[0], ...testProducts.products];
     },
   },
   mounted() {
@@ -67,8 +190,21 @@ export default {
     // 設定 axios 在 headers 中夾帶 token
     axios.defaults.headers.common["Authorization"] = token;
 
-    this.getItems();
+    this.checkAdmin();
   },
 };
 </script>
-<style lang=""></style>
+<style lang="scss">
+img {
+  object-fit: contain;
+  max-width: 100%;
+}
+
+.primary-image {
+  height: 300px;
+}
+
+.images {
+  height: 150px;
+}
+</style>

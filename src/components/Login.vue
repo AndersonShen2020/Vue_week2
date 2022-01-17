@@ -69,11 +69,11 @@ export default {
           // expired = unix timestamp
           const { token, expired } = res.data;
           document.cookie = `hexToken=${token}; expires=${new Date(expired)};`;
-          router.push("/products");
         })
         .catch((err) => {
           console.log(err.response.data.error.message);
         });
+      router.push("/products");
     },
   },
 };
